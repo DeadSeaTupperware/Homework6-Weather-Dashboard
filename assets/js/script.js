@@ -4,6 +4,8 @@ const cityInput = document.querySelector("#city-input");
 const currentWeather = document.querySelector("#current-weather");
 const weatherCards = document.querySelector("#weather-cards");
 const historyEl = document.querySelector("#history");
+let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
+
 
 function getCoordinates () {
     let cityName = cityInput.value.trim(); // Get user input city name.
@@ -20,6 +22,11 @@ function getCoordinates () {
     .then(function (data) {
         if(!data.length) return alert( `${cityName} was not found.`);
         const { name, lat, lon } = data[0];
+
+        searchHistory.push({ name, lat, lon });
+        console.log(searchHistory);
+        localStorage.setItem('search', JSON.stringify(searchHistory));
+
         getWeather(name, lat, lon);
     }).catch(() => {
         alert("An error occurred.");
@@ -35,7 +42,6 @@ function getWeather(cityName, lat, lon) {
     })
     .then(function (data) {
         const uniqueDays = [];
-        console.log(data);
 
         // Get one forcast per day
        const fiveDayForecast = data.list.filter(forecast => {
@@ -89,6 +95,20 @@ function createCard(cityName, weatherItem, index) {
 
 }
 
-searchButton.addEventListener("click", getCoordinates);
+function renderSearchHistory() {
+    historyEl.innerHTML = "";
+    for (let i = 0; i < searchHistory.length; i++) {
+        const historyCity = document.createElement("button");
+        historyCity.addEventListener("click", function () {
+            getWeather(historyCity);
+        })
+        historyEl.append(historyCity);
+    }
+}
+
+searchButton.addEventListener("click", function () {
+    getCoordinates();
+    renderSearchHistory();
+});
 
 
