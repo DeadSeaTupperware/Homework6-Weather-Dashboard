@@ -1,8 +1,8 @@
 const apiKey = "87415fb694122c5c0a1eacde1eec7367";
 const searchButton = document.querySelector("#search-button");
 const cityInput = document.querySelector("#city-input");
-const currentWeather = document.querySelector(".current-weather");
-const weatherCards = document.querySelector(".weather-cards");
+const currentWeather = document.querySelector("#current-weather");
+const weatherCards = document.querySelector("#weather-cards");
 
 function getCoordinates () {
     let cityName = cityInput.value.trim(); // Get user input city name.
@@ -77,7 +77,7 @@ function createCard(cityName, weatherItem, index) {
             </div>`;
     // 5-Day Forecast Cards
     } else {
-        return `<li class="card">
+        return `<li class="col-md-2 forecast bg-primary text-white m-2 rounded" id="card">
                     <h3>${weatherItem.dt_txt.split(" ")[0]}</h3>
                     <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="">
                     <h4>Temp: ${weatherItem.main.temp}°F</h4>
@@ -89,3 +89,5 @@ function createCard(cityName, weatherItem, index) {
 }
 
 searchButton.addEventListener("click", getCoordinates);
+
+
