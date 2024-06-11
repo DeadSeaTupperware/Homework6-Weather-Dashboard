@@ -1,6 +1,7 @@
 const apiKey = "87415fb694122c5c0a1eacde1eec7367";
 const searchButton = document.querySelector("#search-button");
 const cityInput = document.querySelector("#city-input");
+const currentWeather = document.querySelector(".current-weather");
 const weatherCards = document.querySelector(".weather-cards");
 
 function getCoordinates () {
@@ -45,11 +46,16 @@ function getWeather(cityName, lat, lon) {
 
         // Clear previous values
         cityInput.value = "";
+        currentWeather.innerHTML = "";
         weatherCards.innerHTML = "";
-        console.log(fiveDayForecast);
 
-        fiveDayForecast.forEach(weatherItem => {
-            weatherCards.insertAdjacentHTML("beforeend", createCard(weatherItem));
+        // Creating and adding cards
+        fiveDayForecast.forEach((weatherItem, index) => {
+            if(index===0) {
+                currentWeather.insertAdjacentHTML("beforeend", createCard(cityName, weatherItem, index));
+            } else {
+                weatherCards.insertAdjacentHTML("beforeend", createCard(cityName, weatherItem, index));
+            }
         });
 
     }).catch(() => {
@@ -57,14 +63,28 @@ function getWeather(cityName, lat, lon) {
     });
 }
 
-function createCard(weatherItem) {
-    return `<li class="card">
-                    <h3>(${weatherItem.dt_txt.split(" ")[0]})</h3>
-                    <img src="https://openweathermap.org/img/wn/${weatherItem.weather.icon}@2x.png" alt="">
+function createCard(cityName, weatherItem, index) {
+    // Main Card
+    if(index === 0) {
+        return `<div class="stats">
+                    <h2>${cityName} ${weatherItem.dt_txt.split(" ")[0]}</h2>
+                    <h4>Temperature: ${weatherItem.main.temp}°F</h4>
+                    <h4>Wind: ${weatherItem.wind.speed} mph</h4>
+                    <h4>Humidity: ${weatherItem.main.humidity}%</h4>
+                </div>
+                <div class="icon">
+                    <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="">
+            </div>`;
+    // 5-Day Forecast Cards
+    } else {
+        return `<li class="card">
+                    <h3>${weatherItem.dt_txt.split(" ")[0]}</h3>
+                    <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="">
                     <h4>Temp: ${weatherItem.main.temp}°F</h4>
                     <h4>Wind: ${weatherItem.wind.speed} mph</h4>
                     <h4>Humidity: ${weatherItem.main.humidity}%</h4>
                 </li>`;
+    }
 
 }
 
