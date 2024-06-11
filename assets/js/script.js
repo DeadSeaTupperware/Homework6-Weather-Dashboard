@@ -5,6 +5,7 @@ const currentWeather = document.querySelector("#current-weather");
 const weatherCards = document.querySelector("#weather-cards");
 const historyEl = document.querySelector("#history");
 let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
+const clearButton = document.querySelector("#clear-history");
 
 
 function getCoordinates () {
@@ -95,19 +96,31 @@ function createCard(cityName, weatherItem, index) {
 
 }
 
+// Get and display search history as interactable buttons
 function renderSearchHistory() {
     historyEl.innerHTML = "";
     for (let i = 0; i < searchHistory.length; i++) {
+        const currentCity = searchHistory[i];
         const historyCity = document.createElement("button");
+        historyCity.textContent = currentCity.name;
+        historyCity.classList.add("btn", "btn-secondary", "mb-2", "w-100");
         historyCity.addEventListener("click", function () {
-            getWeather(historyCity);
+            getWeather(currentCity.name, currentCity.lat, currentCity.lon);
         })
         historyEl.append(historyCity);
     }
 }
 
+// Listens for clicks on search Button
 searchButton.addEventListener("click", function () {
     getCoordinates();
+    renderSearchHistory();
+});
+
+//Listens for clicks on Clear History Button
+clearButton.addEventListener("click", function() {
+    localStorage.clear();
+    searchHistory = [];
     renderSearchHistory();
 });
 
