@@ -3,6 +3,7 @@ const searchButton = document.querySelector("#search-button");
 const cityInput = document.querySelector("#city-input");
 const currentWeather = document.querySelector("#current-weather");
 const weatherCards = document.querySelector("#weather-cards");
+const historyEl = document.querySelector("#history");
 
 function getCoordinates () {
     let cityName = cityInput.value.trim(); // Get user input city name.
